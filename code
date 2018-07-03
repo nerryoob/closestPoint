@@ -1,0 +1,54 @@
+"""Finds the "closest points" of an arbitrary number of lists
+
+Closest points: One item from each list, such that the total difference is the lowest possible
+i.e. where you take a, b, c, d... one from each list, and the total difference is ¦a-b¦ + ¦a-c¦ + ¦a-d¦ + ¦b-c¦ + ¦b-d¦ + ¦c-d¦
+
+Uses similiar algorithm to dijkstra's algorithm - has a list of "solutions" that only have items from some of the lists, then takes another list and inserts into the ordered results list a copy of top solution with each item.
+
+Each solution in construction is a jagged array, with array of numbers as one item (the solution) and overall difference in other
+
+eg. 
+    
+  Solution
+[[20,19,21], 4]
+"""
+
+def insertInResults(resultList,item):
+  """Inserts item into list of results"""
+  length = len(resultList)
+  index = 0
+  #Uses mechanic of not evaluating remaining bits of condition if certain result is guaranteed to avoid errors 
+  while (index<length and resultList[index][1]<item[1]):
+    index += 1
+  resultList.insert(index, item)
+
+def totalDifference(solution):
+  """Returns total difference of solution passed """
+  length = len(solution)
+  result = 0
+  for index, number1 in enumerate(solution):
+    for number2Index in range(index + 1, length):
+      result += abs(number1 - solution[number2Index])
+  return result
+
+
+def closestPoint(inputLists):
+  """Finds closest points of a list of lists"""
+  amountOfLists = len(inputLists)
+  #Format -  A list of items, each of which is a list of the numbers in the solution in progress and the total difference
+  #This step is not neccessary, the algorithm generates the same thing, but it speeds it up to do like this rather than the long winded way that the algorithm uses
+  resultList = [[[x], 0] for x in inputLists[0]]
+  while (True):
+    #Remove top item
+    topItem = resultList.pop(0)
+    #Return the top item if it is complete
+    if len(topItem[0])==amountOfLists:
+      return topItem
+    #Make new solutions with top item and insert them into the results list
+    for newNumber in inputLists[len(topItem[0])]:
+      newItem = [topItem[0].copy(), 0]
+      newItem[0].append(newNumber)
+      newItem[1] = totalDifference(newItem[0])
+      insertInResults(resultList, newItem)
+
+print(closestPoint([[14, 22, 36, 48],[14, 23, 30, 72], [1, 18, 24]]))
