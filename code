@@ -51,4 +51,5 @@ def closestPoint(inputLists):
       newItem[1] = totalDifference(newItem[0])
       insertInResults(resultList, newItem)
 
-print(closestPoint([[14, 22, 36, 48],[14, 23, 30, 72], [1, 18, 24]]))
+#test it
+#print(closestPoint([[14, 22, 36, 48],[14, 23, 30, 72], [1, 18, 24]]))
